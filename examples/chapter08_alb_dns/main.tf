@@ -11,9 +11,9 @@ module "bucket" {
   bucket_common_name = var.bucket_common_name
 }
 module "alb_dns" {
-  source            = "../../modules/elb_dns"
-  vpc_id            = module.network.vpc_id
-  alb_subnets       = [
+  source = "../../modules/elb_dns"
+  vpc_id = module.network.vpc_id
+  public_subnets = [
     module.network.public_subnet_0_id,
     module.network.public_subnet_1_id,
   ]

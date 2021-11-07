@@ -1,12 +1,12 @@
 resource "aws_lb" "alb" {
   name                       = "terraform"
-  load_balancer_type         = "application"    # application/network
-  internal                   = false            # false:インターネット向け, true: VPC内部向け
-  idle_timeout               = 60               # タイムアウト(sec)
-  enable_deletion_protection = false            # 削除保護を行うか
+  load_balancer_type         = "application" # application/network
+  internal                   = false         # false:インターネット向け, true: VPC内部向け
+  idle_timeout               = 60            # タイムアウト(sec)
+  enable_deletion_protection = false         # 削除保護を行うか
 
   # ALBに割り当てるサブネット
-  subnets = var.alb_subnets
+  subnets = var.public_subnets
 
   # ALBのアクセスログの保存先
   access_logs {

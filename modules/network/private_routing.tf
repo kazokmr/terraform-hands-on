@@ -1,11 +1,11 @@
 # Privateサブネット用のルートテーブルの定義
 # マルチAZに対応するためNATゲートウェイごとにルートテーブルを作成する(NATゲートウェイはインターネットゲートウェイとは異なる)
 resource "aws_route_table" "private_0" {
-  vpc_id = aws_vpc.example.id
+  vpc_id = aws_vpc.vpc.id
 }
 
 resource "aws_route_table" "private_1" {
-  vpc_id = aws_vpc.example.id
+  vpc_id = aws_vpc.vpc.id
 }
 
 # Privateサブネットからインターネットへ接続するためにNATゲートウェイを割り当てる

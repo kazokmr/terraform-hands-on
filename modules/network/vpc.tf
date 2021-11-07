@@ -1,4 +1,4 @@
-resource "aws_vpc" "example" {
+resource "aws_vpc" "vpc" {
 
   # IPv4アドレスの範囲を指定
   cidr_block = "10.0.0.0/16"
@@ -9,6 +9,6 @@ resource "aws_vpc" "example" {
 
   # Nameタグを追加
   tags = {
-    Name = "example"
+    Name = "terraform"
   }
 }

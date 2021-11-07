@@ -6,3 +6,6 @@ variable "alb_subnets" {
 }
 # ALBのAccessLogを保管するS3バケットのID
 variable "alb_log_bucket_id" {}
+
+# ホストゾーン名
+variable "host_zone_name" {}

@@ -1,3 +1,4 @@
+# 変数はenv.tfvarsファイルで定義しているので、コマンド実行時は `-var-file=../../env.tfvars` オプションを付ける
 provider "aws" {
   region = "ap-northeast-1"
 }
@@ -7,10 +8,10 @@ module "network" {
 }
 module "bucket" {
   source             = "../../modules/s3_bucket"
-  bucket_common_name = ""
+  bucket_common_name = var.bucket_common_name
 }
-module "alb" {
-  source            = "../../modules/load_balancer"
+module "alb_dns" {
+  source            = "../../modules/elb_dns"
   vpc_id            = module.network.vpc_id
   alb_subnets       = [
     module.network.public_subnet_0_id,
@@ -18,8 +19,5 @@ module "alb" {
   ]
   alb_log_bucket_id = module.bucket.alb_lob_bucket_id
   depends_on        = [module.bucket]
-}
-
-output "alb_dns_name" {
-  value = module.alb.alb_dns_name
+  host_zone_name    = var.host_zone_name
 }

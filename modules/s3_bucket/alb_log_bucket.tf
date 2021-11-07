@@ -41,6 +41,7 @@ data "aws_iam_policy_document" "alb_log" {
 
 # パブリックアクセスをブロックする
 resource "aws_s3_bucket_public_access_block" "alb_log" {
+  depends_on              = [aws_s3_bucket_policy.alb_log]  # バケットポリシーの割り当てと競合するので後に実行する
   bucket                  = aws_s3_bucket.alb_log.id
   block_public_acls       = true
   block_public_policy     = true

@@ -1,7 +1,7 @@
 # サーバー証明書を定義する
 resource "aws_acm_certificate" "acm" {
   domain_name               = "*.${aws_route53_zone.sub_domain.name}"   # サブドメインに対するワイルドカード証明書とする
-  subject_alternative_names = []                                        # 代替ドメインは無し。ワイルドカードにするので
+  subject_alternative_names = [aws_route53_zone.sub_domain.name]        # 代替ドメインはサブドメイン自身
   validation_method         = "DNS"                                     # 検証方法はDNS/EMAILが選べる。自動更新させるならDNS
   lifecycle {
     create_before_destroy = true                                        # 新しい証明書を作成してから古い証明書と差し替える
@@ -22,7 +22,7 @@ resource "aws_route53_record" "validation_acm" {
   type            = each.value.type
   records         = [each.value.record]
   zone_id         = aws_route53_zone.sub_domain.zone_id
-  ttl             = 60
+  ttl             = 300
 }
 
 # 検証完了まで待機

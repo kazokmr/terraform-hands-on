@@ -4,4 +4,5 @@ provider "aws" {
 
 module "buckets" {
   source = "../../modules/s3_bucket"
+  bucket_common_name = ""
 }

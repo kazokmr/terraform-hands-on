@@ -2,7 +2,7 @@
 resource "aws_s3_bucket" "alb_log" {
 
   # バケット名は全世界で一意としないと作られない
-  bucket = "alb-log.kazokmr.net"
+  bucket = "alb-log.${var.bucket_common_name}"
 
   # バケット内のオブジェクトのライフサイクル
   lifecycle_rule {
@@ -13,6 +13,9 @@ resource "aws_s3_bucket" "alb_log" {
       days = "180"
     }
   }
+
+  # 強制削除: バケットにファイルがあってもDestroyを行えるようにする
+  force_destroy = true
 }
 
 # S3バケットへのアクセス件を定義するバケットポリシー
@@ -28,9 +31,10 @@ data "aws_iam_policy_document" "alb_log" {
     actions   = ["s3:PutObject"]
     resources = ["arn:aws:s3:::${aws_s3_bucket.alb_log.id}/*"]
 
+    # type > identifiers の順番に定義しないと正しく定義されないかも
     principals {
-      identifiers = ["582318560864"] # ap-northeast-1 の ELB のアカウントID
       type        = "AWS"
+      identifiers = ["582318560864"]  # ap-northeast-1 の ELB のアカウントID
     }
   }
 }
@@ -42,4 +46,8 @@ resource "aws_s3_bucket_public_access_block" "alb_log" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+}
+
+output "alb_lob_bucket_id" {
+  value = aws_s3_bucket.alb_log.id
 }

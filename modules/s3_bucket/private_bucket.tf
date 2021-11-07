@@ -2,7 +2,7 @@
 resource "aws_s3_bucket" "private" {
 
   # バケット名は全世界で一意としないと作られない
-  bucket = "private.kazokmr.net"
+  bucket = "private.${var.bucket_common_name}"
 
   # バージョンニングの有効化
   versioning {

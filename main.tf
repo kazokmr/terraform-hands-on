@@ -40,3 +40,6 @@ module "batch" {
     module.network.private_subnet_0_id,
   ]
 }
+module "kms" {
+  source = "./modules/kms"
+}

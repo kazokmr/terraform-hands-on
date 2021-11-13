@@ -4,3 +4,7 @@ provider "aws" {
 module "ecr" {
   source = "../../modules/ecr/"
 }
+
+module "codebuild" {
+  source = "../../modules/codebuild"
+}

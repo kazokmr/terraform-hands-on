@@ -9,4 +9,6 @@ resource "aws_s3_bucket" "artifacts" {
       days = 180
     }
   }
+
+  force_destroy = true
 }

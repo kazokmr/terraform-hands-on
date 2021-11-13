@@ -1,0 +1,53 @@
+provider "aws" {
+  region = "ap-northeast-1"
+}
+
+module "network" {
+  source = "../../modules/network"
+}
+module "bucket" {
+  source             = "../../modules/s3_bucket"
+  bucket_common_name = var.bucket_common_name
+}
+module "alb_dns" {
+  source = "../../modules/elb_dns"
+  vpc_id = module.network.vpc_id
+  public_subnets = [
+    module.network.public_subnet_0_id,
+    module.network.public_subnet_1_id,
+  ]
+  alb_log_bucket_id = module.bucket.alb_lob_bucket_id
+  depends_on        = [module.bucket]
+  host_zone_name    = var.host_zone_name
+}
+module "ecs" {
+  source          = "../../modules/ecs"
+  vpc_id          = module.network.vpc_id
+  vpc_cider_block = [module.network.vpc_cider_block]
+  private_subnets = [
+    module.network.private_subnet_0_id,
+    module.network.private_subnet_1_id,
+  ]
+  alb_target_group_ecs_arn   = module.alb_dns.alb_target_group_ecs_arn
+  container_definitions_path = "../../${var.container_definitions_path}"
+}
+
+module "ecr" {
+  source = "../../modules/ecr/"
+}
+
+module "codebuild" {
+  source = "../../modules/codebuild"
+}
+
+module "codepipeline" {
+  source               = "../../modules/codepipeline"
+  bucket_common_name   = var.bucket_common_name
+  codebuild_project_id = module.codebuild.codebuild_project_id
+  ecs_cluster_name     = module.ecs.ecs_cluster_name
+  ecs_service_name     = module.ecs.ecs_service_name
+  github_name          = var.github_name
+  github_repo          = var.github_repo
+  github_branch        = var.github_branch
+  github_token         = var.github_token
+}

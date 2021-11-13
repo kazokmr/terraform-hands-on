@@ -14,8 +14,7 @@ resource "aws_s3_bucket" "alb_log" {
     }
   }
 
-  # 強制削除: バケットにファイルがあってもDestroyを行えるようにする
-  force_destroy = true
+  force_destroy = true # デモなのでファイルがあっても強制削除を可能にする
 }
 
 # S3バケットへのアクセス件を定義するバケットポリシー
@@ -34,14 +33,14 @@ data "aws_iam_policy_document" "alb_log" {
     # type > identifiers の順番に定義しないと正しく定義されないかも
     principals {
       type        = "AWS"
-      identifiers = ["582318560864"]  # ap-northeast-1 の ELB のアカウントID
+      identifiers = ["582318560864"] # ap-northeast-1 の ELB のアカウントID
     }
   }
 }
 
 # パブリックアクセスをブロックする
 resource "aws_s3_bucket_public_access_block" "alb_log" {
-  depends_on              = [aws_s3_bucket_policy.alb_log]  # バケットポリシーの割り当てと競合するので後に実行する
+  depends_on              = [aws_s3_bucket_policy.alb_log] # バケットポリシーの割り当てと競合するので後に実行する
   bucket                  = aws_s3_bucket.alb_log.id
   block_public_acls       = true
   block_public_policy     = true

@@ -15,6 +15,5 @@ resource "aws_s3_bucket" "public" {
     max_age_seconds = 3000
   }
 
-  # 強制削除: バケットにファイルがあってもDestroyを行えるようにする
-  force_destroy = true
+  force_destroy = true # デモなのでファイルがあっても強制削除を可能にする
 }

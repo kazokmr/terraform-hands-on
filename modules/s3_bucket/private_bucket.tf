@@ -17,6 +17,8 @@ resource "aws_s3_bucket" "private" {
       }
     }
   }
+
+  force_destroy = true # デモなのでファイルがあっても強制削除を可能にする
 }
 
 # パブリックアクセスをブロックする

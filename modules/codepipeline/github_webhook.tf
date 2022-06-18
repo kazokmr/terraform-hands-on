@@ -1,6 +1,6 @@
 # TerraformのGitHubプロバイダを宣言する
 provider "github" {
-  organization = var.github_name # GitHubのアカウント
+  owner = var.github_name
 }
 
 # GitHubのWebhook設定を定義: AWS Codepipelineに送信するWebhook

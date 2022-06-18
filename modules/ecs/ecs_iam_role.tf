@@ -5,7 +5,7 @@ data "aws_iam_policy" "ecs_task_execution_role_policy" {
 
 # ECSタスク実行のためのポリシードキュメントを定義: ECSタスク実行ポリシーを継承する
 data "aws_iam_policy_document" "ecs_task_execution" {
-  source_json = data.aws_iam_policy.ecs_task_execution_role_policy.policy
+  source_policy_documents = [data.aws_iam_policy.ecs_task_execution_role_policy.policy]
 
   # ECSタスク実行ポリシーに加え、SSMのパラメータアクセスとKMSの複号権限の許可を追加
   statement {

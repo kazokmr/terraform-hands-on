@@ -4,22 +4,28 @@ resource "aws_s3_bucket" "alb_log" {
   # バケット名は全世界で一意としないと作られない
   bucket = "alb-log.${var.bucket_common_name}"
 
-  # バケット内のオブジェクトのライフサイクル
-  lifecycle_rule {
-    enabled = true
+  force_destroy = true # デモなのでファイルがあっても強制削除を可能にする
+}
+
+# バケット内のオブジェクトのライフサイクル
+resource "aws_s3_bucket_lifecycle_configuration" "alb_log_lifecycle" {
+
+  bucket = aws_s3_bucket.alb_log.bucket
+
+  rule {
+    id     = "alb_log"
+    status = "Enabled"
 
     # 180日を経過したオブジェクトを削除する
     expiration {
-      days = "180"
+      days = 180
     }
   }
-
-  force_destroy = true # デモなのでファイルがあっても強制削除を可能にする
 }
 
 # S3バケットへのアクセス件を定義するバケットポリシー
 resource "aws_s3_bucket_policy" "alb_log" {
-  bucket = aws_s3_bucket.alb_log.id
+  bucket = aws_s3_bucket.alb_log.bucket
   policy = data.aws_iam_policy_document.alb_log.json
 }
 
@@ -41,7 +47,7 @@ data "aws_iam_policy_document" "alb_log" {
 # パブリックアクセスをブロックする
 resource "aws_s3_bucket_public_access_block" "alb_log" {
   depends_on              = [aws_s3_bucket_policy.alb_log] # バケットポリシーの割り当てと競合するので後に実行する
-  bucket                  = aws_s3_bucket.alb_log.id
+  bucket                  = aws_s3_bucket.alb_log.bucket
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true

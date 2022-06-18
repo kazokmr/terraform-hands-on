@@ -14,7 +14,7 @@ module "ec2_for_ssm_role" {
 
 # SSMManagedInstanceCoreポリシーをベースにしたポリシードキュメントを作成
 data "aws_iam_policy_document" "ec2_for_ssm" {
-  source_json = data.aws_iam_policy.ec2_for_ssm.policy
+  source_policy_documents = [data.aws_iam_policy.ec2_for_ssm.policy]
 
   statement {
     effect    = "Allow"

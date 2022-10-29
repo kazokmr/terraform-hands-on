@@ -1,3 +1,13 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.19"
+    }
+  }
+  required_version = "1.3.3"
+}
+
 provider "aws" {
   region = "ap-northeast-1"
 }
@@ -10,8 +20,8 @@ module "bucket" {
   bucket_common_name = var.bucket_common_name
 }
 module "alb_dns" {
-  source = "./modules/elb_dns"
-  vpc_id = module.network.vpc_id
+  source         = "./modules/elb_dns"
+  vpc_id         = module.network.vpc_id
   public_subnets = [
     module.network.public_subnet_0_id,
     module.network.public_subnet_1_id,
@@ -36,7 +46,7 @@ module "batch" {
   ecs_task_execution_iam_role_arn  = module.ecs.ecs_task_execution_iam_role_arn
   batch_container_definitions_path = var.batch_container_definitions_path
   ecs_cluster_arn                  = module.ecs.ecs_cluster_arn
-  private_subnets = [
+  private_subnets                  = [
     module.network.private_subnet_0_id,
   ]
 }
